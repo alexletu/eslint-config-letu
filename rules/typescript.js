@@ -1,17 +1,14 @@
 /* eslint-disable import/no-extraneous-dependencies */
-const { rules: baseBestPracticesRules } = require('eslint-config-airbnb-base/rules/best-practices');
-const { rules: baseErrorsRules } = require('eslint-config-airbnb-base/rules/errors');
-const { rules: baseES6Rules } = require('eslint-config-airbnb-base/rules/es6');
-const { rules: baseImportsRules } = require('eslint-config-airbnb-base/rules/imports');
-const { rules: baseStyleRules } = require('eslint-config-airbnb-base/rules/style');
-const { rules: baseVariablesRules } = require('eslint-config-airbnb-base/rules/variables');
+const { rules: baseBestPracticesRules } = require('./best-practices');
+const { rules: baseErrorsRules } = require('./errors');
+const { rules: baseES6Rules } = require('./es6');
+const { rules: baseImportsRules } = require('./imports');
+const { rules: baseStyleRules } = require('./style');
+const { rules: baseVariablesRules } = require('./variables');
 /* eslint-enable import/no-extraneous-dependencies */
 
 module.exports = {
-  plugins: [
-    '@typescript-eslint',
-    'arca',
-  ],
+  plugins: ['@typescript-eslint'],
   parser: '@typescript-eslint/parser',
   settings: {
     // Apply special parsing for TypeScript files
@@ -100,6 +97,7 @@ module.exports = {
     // Replace Airbnb 'lines-between-class-members' rule with '@typescript-eslint' version
     // https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/lines-between-class-members.md
     'lines-between-class-members': 'off',
+    '@typescript-eslint/lines-between-class-members': baseStyleRules['lines-between-class-members'],
 
     // Replace Airbnb 'no-array-constructor' rule with '@typescript-eslint' version
     // https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-array-constructor.md
@@ -160,10 +158,12 @@ module.exports = {
     // Replace Airbnb 'no-unused-expressions' rule with '@typescript-eslint' version
     // https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-unused-expressions.md
     'no-unused-expressions': 'off',
+    '@typescript-eslint/no-unused-expressions': baseBestPracticesRules['no-unused-expressions'],
 
     // Replace Airbnb 'no-unused-vars' rule with '@typescript-eslint' version
     // https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-unused-vars.md
     'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': baseVariablesRules['no-unused-vars'],
 
     // Replace Airbnb 'no-use-before-define' rule with '@typescript-eslint' version
     // https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-use-before-define.md
@@ -210,50 +210,37 @@ module.exports = {
     'object-curly-spacing': 'off',
     '@typescript-eslint/object-curly-spacing': baseStyleRules['object-curly-spacing'],
 
+    // Append 'ts' and 'tsx' to Airbnb 'import/extensions' rule
+    // https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/extensions.md
+    'import/extensions': [
+      baseImportsRules['import/extensions'][0],
+      baseImportsRules['import/extensions'][1],
+      {
+        ...baseImportsRules['import/extensions'][2],
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
 
-
-    // default rules
-    'arrow-body-style'                                : 0,
-    'class-methods-use-this'                          : 0,
-    'consistent-return'                               : 0,
-    'func-names'                                      : 0,
-    'guard-for-in'                                    : 0,
-    'key-spacing'                                     : [2, { singleLine: { beforeColon: false, afterColon: true }, multiLine: { beforeColon: false, afterColon: true, align: 'colon' } }],
-    'object-curly-newline'                            : [2, { ObjectExpression: { consistent: true }, ObjectPattern: { consistent: true }, ImportDeclaration: { consistent: true }, ExportDeclaration: { consistent: true } }],
-    'no-multiple-empty-lines'                         : [2, { max: 1, maxBOF: 0, maxEOF: 1 }],
-    'max-len'                                         : 0,
-    'no-await-in-loop'                                : 0,
-    'no-case-declarations'                            : 0,
-    'no-console'                                      : 0,
-    'no-mixed-operators'                              : 0,
-    'no-multi-spaces'                                 : 0,
-    'no-nested-ternary'                               : 0,
-    'no-param-reassign'                               : 0,
-    'no-plusplus'                                     : 0,
-    'no-process-exit'                                 : 0,
-    'no-restricted-syntax'                            : 0,
-    'no-undef'                                        : 0,
-    'no-underscore-dangle'                            : 0,
-    'prefer-arrow-callback'                           : 0,
-    'prefer-destructuring'                            : 0,
-    // plugins
-    'arca/import-align'                               : 2,
-    'arca/import-ordering'                            : 2,
-    'import/extensions'                               : 0,
-    'import/order'                                    : 0,
-    'import/prefer-default-export'                    : 0,
-    'import/no-extraneous-dependencies'               : 0,
-    '@typescript-eslint/ban-types'                    : 0,
-    '@typescript-eslint/ban-ts-comment'               : 0,
-    '@typescript-eslint/no-unused-vars'               : 0,
-    '@typescript-eslint/no-explicit-any'              : 0,
-    '@typescript-eslint/no-var-requires'              : 0,
-    '@typescript-eslint/no-empty-interface'           : 0,
-    '@typescript-eslint/no-non-null-assertion'        : 0,
-    '@typescript-eslint/no-unused-expressions'        : 0,
-    '@typescript-eslint/type-annotation-spacing'      : 0,
-    '@typescript-eslint/lines-between-class-members'  : 0,
-    '@typescript-eslint/explicit-function-return-type': 0,
+    
+    // Append 'ts' and 'tsx' extensions to Airbnb 'import/no-extraneous-dependencies' rule
+    // https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
+    'import/no-extraneous-dependencies': [
+      baseImportsRules['import/no-extraneous-dependencies'][0],
+      {
+        ...baseImportsRules['import/no-extraneous-dependencies'][1],
+        devDependencies: baseImportsRules[
+          'import/no-extraneous-dependencies'
+        ][1].devDependencies.reduce((result, devDep) => {
+          const toAppend = [devDep];
+          const devDepWithTs = devDep.replace(/\bjs(x?)\b/g, 'ts$1');
+          if (devDepWithTs !== devDep) {
+            toAppend.push(devDepWithTs);
+          }
+          return [...result, ...toAppend];
+        }, []),
+      },
+    ],
   },
   overrides: [
     {

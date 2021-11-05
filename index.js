@@ -3,7 +3,16 @@ require(`@rushstack/eslint-patch/modern-module-resolution`);
 
 module.exports = {
   extends: [
-    `./rules/base`,
+    './rules/best-practices',
+    './rules/errors',
+    './rules/node',
+    './rules/style',
+    './rules/variables',
+    './rules/es6',
+    './rules/imports',
+    './rules/strict',
+    './rules/typescript',
+    './rules/overrides',
   ].map(require.resolve),
   parser: require.resolve(`@typescript-eslint/parser`),
   env: {
@@ -14,3 +23,5 @@ module.exports = {
     ecmaVersion: 2020,
   },
 };
+
+
